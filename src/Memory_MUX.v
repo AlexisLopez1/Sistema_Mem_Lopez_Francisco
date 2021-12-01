@@ -8,10 +8,10 @@ module Memory_MUX
 );
 	
 	always @(*) begin
-		//$display($time," MUX: ram=%h, rom=%h", Ram_i, Rom_i);
 		case(Selector)
 			32'h400000: begin
 				Instruction_o = Rom_i;
+
 			end
 			32'h010010000: begin
 				Instruction_o = Ram_i;
