@@ -4,6 +4,7 @@ module Program_Memory
 	parameter MEMORY_DEPTH 	= 64,
 	parameter DATA_WIDTH 	= 32
 )(
+	input Enable_i,
 	input 	  [(DATA_WIDTH-1):0]	Address_i,
 	output reg [(DATA_WIDTH-1):0]	Instruction_o
 );
@@ -15,6 +16,8 @@ module Program_Memory
 	end
 	
 	always @ (Address_i) begin
-		Instruction_o = rom[Address_i];
+		if (Enable_i) begin
+			Instruction_o = rom[Address_i];
+		end
 	end
 endmodule 

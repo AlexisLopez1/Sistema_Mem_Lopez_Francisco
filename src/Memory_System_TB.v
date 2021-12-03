@@ -45,15 +45,11 @@ initial // Clock generator
     forever #2 clk_tb = !clk_tb;
   end
 /*********************************************************/
+
 initial begin
 	#0 Write_Enable_i_tb = 1'b0;
 	#0 Instruction_Range_i_tb = 32'h400000;
-	
-	#450 Write_Enable_i_tb = 1'b1;
-	#450 Instruction_Range_i_tb = 32'h10010000;
-end
 
-initial begin
 	#0 Address_i_tb = 32'h400000;
 	#50 Address_i_tb = 32'h400004;
 	#50 Address_i_tb = 32'h400008;
@@ -62,7 +58,12 @@ initial begin
 	#50 Address_i_tb = 32'h400014;
 	#50 Address_i_tb = 32'h400018;
 	#50 Address_i_tb = 32'h40001c;
+	
+end
 
+initial begin
+	#450 Write_Enable_i_tb = 1'b1;
+	#50 Instruction_Range_i_tb = 32'h10010000;
 	#50 Address_i_tb = 32'h10010000;
 	#50 Address_i_tb = 32'h10010008;
 	#50 Address_i_tb = 32'h1001000c;
@@ -71,11 +72,11 @@ initial begin
 end
 
 initial begin
-	#450  Write_Data_i_tb = 32'h2008ffff;
-	#50 Write_Data_i_tb = 32'h20090010;
-	#50 Write_Data_i_tb = 32'h200a000a;
-	#50 Write_Data_i_tb = 32'h200b0019;
-	#50 Write_Data_i_tb = 32'h012a8020;
+	#450 Write_Data_i_tb = 32'hFFFFFFFF;
+	#50 Write_Data_i_tb = 32'h12345678;
+	#50 Write_Data_i_tb = 32'h98761234;
+	#50 Write_Data_i_tb = 32'hA0A0A0A0;
+	#50 Write_Data_i_tb = 32'hABCDEF12;
 end 
 
 /*********************************************************/

@@ -13,13 +13,9 @@ module Memory_System
 	output [(DATA_WIDTH-1):0] Instruction_o
 );
 	// wires to save phisical instruction
-	wire [(DATA_WIDTH-1):0] ph_Instruction_rom;
-	wire [(DATA_WIDTH-1):0] ph_Instruction_ram;
+	wire [(DATA_WIDTH-1):0] ph_Instruction;
 	//Wire to save priority
 	wire [1:0] Enable;
-	// wires to save inputs
-	wire [(DATA_WIDTH-1):0] Address_i_rom;
-	wire [(DATA_WIDTH-1):0] Address_i_ram;
 	// wires to save outputs
 	wire [(DATA_WIDTH-1):0] Instruction_o_rom;
 	wire [(DATA_WIDTH-1):0] Instruction_o_ram;
@@ -30,43 +26,33 @@ module Memory_System
 		.Instruction_Range_i(Instruction_Range_i),
 		.Enable_o(Enable));
 
-	
-	//===== ROM =================================
 	// Decoder
 	Instruction_Decoder #(
 		.DATA_WIDTH(DATA_WIDTH))
 	ROM_DECODER(
 		.SUBSTRACT(Instruction_Range_i),
 		.v_inst_i(Address_i),
-		.ph_inst_o(ph_Instruction_rom));
+		.ph_inst_o(ph_Instruction));
 	
-	//ROM
+	//===== ROM =================================
 	Program_Memory #(
 		.MEMORY_DEPTH(MEMORY_DEPTH),
 		.DATA_WIDTH(DATA_WIDTH))
 	ROM(
-		.Address_i(ph_Instruction_rom),
+		.Enable_i(Enable[0]),
+		.Address_i(ph_Instruction),
 		.Instruction_o(Instruction_o_rom));
 	
-	//===== RAM =================================
-	// Decoder
-	Instruction_Decoder #(
-		.DATA_WIDTH(DATA_WIDTH))
-	RAM_DECODER(
-		.SUBSTRACT(Instruction_Range_i),
-		.v_inst_i(Address_i),
-		.ph_inst_o(ph_Instruction_ram));
-		
-	// RAM
+	//===== RAM =================================	
 	Data_Memory #(
 		.MEMORY_DEPTH(MEMORY_DEPTH),
 		.DATA_WIDTH(DATA_WIDTH))
 	RAM
 	(
 		.clk(clk),
-		.Write_Enable_i(Write_Enable_i),
+		.Write_Enable_i(Write_Enable_i & Enable[1]),
 		.Write_Data_i(Write_Data_i),
-		.Address_i(ph_Instruction_ram),
+		.Address_i(ph_Instruction),
 		.Instruction_o(Instruction_o_ram));
 
 	//==== MUX =================================
@@ -77,7 +63,6 @@ module Memory_System
 		.Selector(Instruction_Range_i),
 		.Ram_i(Instruction_o_ram), 
 		.Rom_i(Instruction_o_rom),
-		.Instruction_o(Instruction_o));	
-	
+		.Instruction_o(Instruction_o));		
 			
 endmodule 
